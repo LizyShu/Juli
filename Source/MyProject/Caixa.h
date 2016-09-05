@@ -21,5 +21,24 @@ public:
 	virtual void Tick( float DeltaSeconds ) override;
 
 	
+
+private:
+
+	UPROPERTY(EditAnywhere)
+		UShapeComponent* Root;
+
+	UPROPERTY(EditAnywhere)
+		UStaticMeshComponent* MeshComp;
+	UPROPERTY(VisibleAnywhere, Category = Tick)
+		float RunningTime = 0;
+
+
+
+
+
+	void DropProjectile();
+	
+
+
 	
 };

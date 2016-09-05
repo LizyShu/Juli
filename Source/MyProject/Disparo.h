@@ -3,16 +3,16 @@
 #pragma once
 
 #include "GameFramework/Actor.h"
-#include "ProjectTileActor.generated.h"
+#include "Disparo.generated.h"
 
 UCLASS()
-class MYPROJECT_API AProjectTileActor : public AActor
+class MYPROJECT_API ADisparo : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AProjectTileActor();
+	ADisparo();
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -20,23 +20,6 @@ public:
 	// Called every frame
 	virtual void Tick( float DeltaSeconds ) override;
 
-private:
-
-	UPROPERTY(VisibleAnywhere, Category = Tick)
-		float RunningTime = 0;
-
-
-
-	UBoxComponent* Root;
-	UStaticMeshComponent* MeshComp;
-	UParticleSystemComponent* Particle;
-	UProjectileMovementComponent* ProjectileMovement;
-
-
-
-
-	float DefaultZ;
-
-
+	
 	
 };

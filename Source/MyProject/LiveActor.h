@@ -30,7 +30,7 @@ private:
 		UStaticMeshComponent* MeshComp;
 
 	UPROPERTY(EditAnywhere)
-		int LifeAmount = 10;
+		int LifeAmount = 1;
 
 	UFUNCTION()
 	void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,

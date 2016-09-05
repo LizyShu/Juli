@@ -2,7 +2,12 @@
 
 #include "MyProject.h"
 #include "MyProjectGameMode.h"
+#include "MyHUD.h"
 
+AMyProjectGameMode::AMyProjectGameMode() {
 
+	HUDClass = AMyHUD::StaticClass();
+
+}
 
 

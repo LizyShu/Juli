@@ -25,6 +25,12 @@ public:
 
 	void SetLife(int NewLife);
 	int GetLife();
+
+	void SetColeta(int NewColeta);
+	int GetColeta();
+
+
+
 	void OnDeath();
 	void ColorirCubo();
 	void DescolorirCubo();
@@ -42,7 +48,12 @@ private:
 	UPROPERTY(EditAnywhere)
 		USpringArmComponent* CameraBoom;
 	UPROPERTY(EditAnywhere)
-	int Life = 100;
+	int Life = 3;
+
+	UPROPERTY(EditAnywhere)
+		int Coleta = 0;
+
+
 
 	UPROPERTY(EditAnywhere)
 		UArrowComponent* ArrowComp;
@@ -61,7 +72,7 @@ private:
 
 
 	UPROPERTY(EditAnywhere)
-		float DamageAmount = 1;
+		float DamageAmount = -1;
 
 	//OnHit
 	UFUNCTION()

@@ -20,14 +20,31 @@ public:
 	// Called every frame
 	virtual void Tick( float DeltaSeconds ) override;
 
+	
 private:
 
 	UPROPERTY(EditAnywhere)
 		UShapeComponent* Root;
 	UPROPERTY(EditAnywhere)
 		UStaticMeshComponent* MeshComp;
+
 	UPROPERTY(VisibleAnywhere, Category = Tick)
-		float RunningTime;
+		float RunningTime = 0;
+	UPROPERTY(VisibleAnywhere, Category = Tick)
+		float RunningTime1 = 10;
+	UPROPERTY(VisibleAnywhere, Category = Tick)
+		float RunningTime2 = 20;
+	UPROPERTY(VisibleAnywhere, Category = Tick)
+		float RunningTime3 = 30;
+	
+
+	UPROPERTY(EditAnywhere)
+		float DamageAmount = -1;
+	UFUNCTION()
+		void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+			int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	
 
 	
 };

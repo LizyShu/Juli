@@ -108,10 +108,19 @@ int AMyCharacter::GetLife() {
 	return Life;
 }
 
+void AMyCharacter::SetColeta(int NewColeta) {
+	Coleta = NewColeta;
+}
+
+int AMyCharacter::GetColeta() {
+	return Coleta;
+}
+
+
 void AMyCharacter::OnDeath() {
 	if (Life <= 0) {
-		FVector InitialLocation(-60.0f, 30.0f, 350.0f);
-		Life = 100;
+		FVector InitialLocation(-1300.0f, -90.0f, 68.0f);
+		Life = 3;
 		SetActorLocation(InitialLocation);
 	}
 }
@@ -131,6 +140,8 @@ void AMyCharacter::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, 
 }
 
 
+
+
 //LogVictoria
 
 void AMyCharacter::ColorirCubo() {
@@ -148,6 +159,8 @@ void AMyCharacter::DescolorirCubo() {
 	Cubo = Cubo - 1;
 
 }
+
+
 
 void AMyCharacter::DropProjectile() {
 	FActorSpawnParameters SpawnParameters;
@@ -175,4 +188,5 @@ void AMyCharacter::Turn(float Value) {
 
 
 }
+
 

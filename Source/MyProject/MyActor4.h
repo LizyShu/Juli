@@ -3,30 +3,25 @@
 #pragma once
 
 #include "GameFramework/Actor.h"
-#include "MyActor.generated.h"
+#include "MyActor4.generated.h"
 
 UCLASS()
-class MYPROJECT_API AMyActor :public AActor
+class MYPROJECT_API AMyActor4 : public AActor
 {
 	GENERATED_BODY()
-
-public:
+	
+public:	
 	// Sets default values for this actor's properties
-	AMyActor();
+	AMyActor4();
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
+	
 	// Called every frame
-	virtual void Tick(float DeltaSeconds) override;
-
-	void SetLife(int NewLife);
-	int GetLife();
-
+	virtual void Tick( float DeltaSeconds ) override;
 
 
 private:
-
 	UPROPERTY(EditAnywhere)
 		UShapeComponent* Root;
 	UPROPERTY(EditAnywhere)
@@ -39,6 +34,5 @@ private:
 	UFUNCTION()
 		void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 			int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-
-
+	
 };

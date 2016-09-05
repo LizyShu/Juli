@@ -1,13 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "MyProject.h"
-#include "ProjectTileActor.h"
+#include "Projectile.h"
 #include "MyCharacter.h"
 
 
-
 // Sets default values
-AProjectTileActor::AProjectTileActor()
+AProjectile::AProjectile()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -17,9 +16,9 @@ AProjectTileActor::AProjectTileActor()
 	RootComponent = Root;
 	Root->bGenerateOverlapEvents = true;
 	Root->SetCollisionProfileName("OverlapAllDynamic");
-	//Root->OnComponentBeginOverlap.AddDynamic(this, &AProjectTileActor::OnOverlapBegin);
+	Root->OnComponentBeginOverlap.AddDynamic(this, &AProjectile::OnOverlapBegin);
 
-	MeshComp = CreateDefaultSubobject<UStaticMeshComponent> (TEXT("MeshComp"));
+	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComp"));
 	MeshComp->SetCollisionProfileName("NoCollision");
 	static ConstructorHelpers::FObjectFinder<UStaticMesh>
 		Mesh(TEXT("StaticMesh'/Game/StarterContent/Shapes/Shape_Cube.Shape_Cube'"));
@@ -34,7 +33,7 @@ AProjectTileActor::AProjectTileActor()
 
 	Particle = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Particle"));
 	Particle->bAutoActivate = true;
-	
+
 	static ConstructorHelpers::FObjectFinder<UParticleSystem>
 		ParticleSystem(TEXT("ParticleSystem'/Game/StarterContent/Particles/P_Explosion.P_Explosion'"));
 	if (ParticleSystem.Succeeded()) {
@@ -58,17 +57,17 @@ AProjectTileActor::AProjectTileActor()
 }
 
 // Called when the game starts or when spawned
-void AProjectTileActor::BeginPlay()
+void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 
 	DefaultZ = GetActorLocation().Z;
 
-	
+
 }
 
 // Called every frame
-void AProjectTileActor::Tick(float DeltaTime)
+void AProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
@@ -80,6 +79,20 @@ void AProjectTileActor::Tick(float DeltaTime)
 	float DestroyTime = 2.0f * RunningTime;
 	if (DestroyTime > 2.0f) {
 		Destroy();
+	}
+}
+
+void AProjectile::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) {
+
+	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr) && (OtherActor->IsA(AMyCharacter::StaticClass()))) {
+
+		AMyCharacter* MyCharacter = Cast<AMyCharacter>(OtherActor);
+		MyCharacter->SetLife(MyCharacter->GetLife() + DamageAmount);
+		MyCharacter->OnDeath();
+		UE_LOG(LogTemp, Warning, TEXT("Life = %d"), MyCharacter->GetLife());
+		Destroy();
+
 	}
 }
 
