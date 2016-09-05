@@ -122,6 +122,7 @@ void AMyCharacter::OnDeath() {
 		FVector InitialLocation(-1300.0f, -90.0f, 68.0f);
 		Life = 3;
 		SetActorLocation(InitialLocation);
+		UE_LOG(LogTemp, Warning, TEXT("O Personajem morreu!"))
 	}
 }
 

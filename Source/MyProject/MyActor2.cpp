@@ -3,6 +3,8 @@
 #include "MyProject.h"
 #include "MyActor2.h"
 #include "MyCharacter.h"
+#include "Projectile.h"
+#include "Bomba.h"
 
 
 // Sets default values
@@ -15,6 +17,7 @@ AMyActor2::AMyActor2()
 	Root->bGenerateOverlapEvents = true;
 	Root->SetCollisionProfileName("OverlapAllDynamic");
 	Root->OnComponentBeginOverlap.AddDynamic(this, &AMyActor2::OnOverlapBegin);
+
 	RootComponent = Root;
 
 	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComp"));
@@ -36,16 +39,32 @@ void AMyActor2::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	FVector LocalizacaoAtual = GetActorLocation();
-	
 
+	RunningTimee += DeltaTime;
+	float BombTime = RunningTimee;
+
+	if (BombTime > 3.0f) {
+		FActorSpawnParameters SpawnParameters;
+		UWorld* World = GetWorld();
+		if (World != nullptr) {
+			FRotator Rotation = MeshComp->GetComponentRotation();
+			ABomba* Proj = World->SpawnActor<ABomba>
+				(GetActorLocation(), Rotation,
+					SpawnParameters);
+			if (Proj != nullptr) {
+
+				RunningTimee = 0.0f;
+			}
+
+		}
+
+	}
 	if(LocalizacaoAtual.X != LocalizacaoAtual.Y){
 		float DeltaHeight = (FMath::Sin(RunningTime - DeltaTime) - FMath::Sin(RunningTime));
 		LocalizacaoAtual.X -= DeltaHeight * 400;
 		RunningTime -= DeltaTime;
 		SetActorLocation(LocalizacaoAtual);
 	}
-
-
 
 
 	if (LocalizacaoAtual.Y != LocalizacaoAtual.X) {
@@ -77,6 +96,7 @@ void AMyActor2::Tick(float DeltaTime)
 	
 }
 
+
 void AMyActor2::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) {
 
@@ -89,6 +109,9 @@ void AMyActor2::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Othe
 
 	}
 }
+
+
+
 
 
 

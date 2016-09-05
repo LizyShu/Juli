@@ -47,6 +47,10 @@ void AColeta::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherA
 		UE_LOG(LogTemp, Warning, TEXT("Item = %d /10"), MyCharacter->GetColeta());
 		Destroy();
 	}
+	if (AmColeta == 10) {
+		AmColeta++;
+	}
+	UE_LOG(LogTemp, Warning, TEXT("Coleta Finalizada!!"));
 
 }
 
