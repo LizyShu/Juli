@@ -29,7 +29,9 @@ public:
 	void SetColeta(int NewColeta);
 	int GetColeta();
 
-
+	FORCEINLINE int GetNewLine() const { return Life; }
+	FORCEINLINE void AMyCharacter::GetNewLine(int NewLine) { Life = NewLine; }
+	FORCEINLINE TArray<class AItem*>GetInventory() const { return Inventory; }
 
 	void OnDeath();
 	void ColorirCubo();
@@ -61,7 +63,8 @@ private:
 	UPROPERTY(EditAnywhere)
 		int Cubo = 0;
 
-
+	USphereComponent* CollectCollisionComp;
+	TArray<class AItem*> Inventory;
 
 	void MoveForward(float value);
 	void MoveRight(float Value);
@@ -69,6 +72,7 @@ private:
 	void StopRun();
 	void DropProjectile();
 	void Turn(float Value);
+	void OnCollect();
 
 
 	UPROPERTY(EditAnywhere)

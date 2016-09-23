@@ -15,9 +15,9 @@ AMyHUD::AMyHUD() {
 		HUDFont = Font.Object;
 	}
 
-	static ConstructorHelpers::FObjectFinder<UTexture2D> Texture(TEXT("Texture2D'/Game/Textures/tumblr_static_heart_3.tumblr_static_heart_3'"));
-	if (Texture.Succeeded()) {
-		MyTexture = Texture.Object;
+	static ConstructorHelpers::FObjectFinder<UTexture2D> PotionTexture(TEXT("Texture2D'/Game/Textures/Dream_Potion_Sprite.Dream_Potion_Sprite'"));
+	if (PotionTexture.Succeeded()) {
+			Potion = PotionTexture.Object;
 	}
 
 }
@@ -38,10 +38,12 @@ void AMyHUD::DrawHUD() {
 
 
 
-	DrawTextureSimple(MyTexture, 550, 10, 1.0f, false);
-	DrawTexture(MyTexture, 200, 200, MyCharacter->GetLife(), MyTexture->GetSizeY(), 0, 0, MyCharacter->GetLife()*3, MyTexture->GetSizeY(),
+	DrawTextureSimple(Potion, ScreenDimensions.X - Potion->GetSizeX()*2, 50, 1.0f, false);
+	DrawTexture(Potion, 200, 200, MyCharacter->GetLife(), Potion->GetSizeY(), 0, 0, MyCharacter->GetLife()*3, Potion->GetSizeY(),
 	FLinearColor::White, EBlendMode::BLEND_Translucent, 1.0f, false, 0.0f, FVector2D::ZeroVector);
 
+	FString	PotionAmount = FString::Printf(TEXT("X %d "), MyCharacter->GetInventory().Num());
+	DrawText(PotionAmount, FColor::Purple, ScreenDimensions.X - Potion->GetSizeX(),50,HUDFont);
 
 }
 
