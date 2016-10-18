@@ -65,6 +65,7 @@ private:
 
 	USphereComponent* CollectCollisionComp;
 	TArray<class AItem*> Inventory;
+	TSubclassOf<class UUserWidget> UserWidget;
 
 	void MoveForward(float value);
 	void MoveRight(float Value);
@@ -73,6 +74,8 @@ private:
 	void DropProjectile();
 	void Turn(float Value);
 	void OnCollect();
+	void Pause();
+
 
 
 	UPROPERTY(EditAnywhere)

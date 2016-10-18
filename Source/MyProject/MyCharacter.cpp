@@ -4,6 +4,13 @@
 #include "MyCharacter.h"
 #include "ProjectTileActor.h"
 #include "Item.h"
+#include "Runtime/UMG/Public/UMG.h"
+#include "Runtime/UMG/Public/UMGStyle.h"
+#include "Runtime/UMG/Public/IUMGModule.h"
+#include "Runtime/UMG/Public/Slate/SObjectWidget.h"
+#include "Runtime/UMG/Public/Blueprint/UserWidget.h"
+#include "Runtime/UMG/Public/Blueprint/WidgetBlueprintLibrary.h"
+#include "Blueprint/UserWidget.h"
 
 
 
@@ -15,9 +22,21 @@ AMyCharacter::AMyCharacter()
 
 	GetCapsuleComponent()->bGenerateOverlapEvents = true;
 
-	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComp"));
-	MeshComp->SetCollisionProfileName("NoColission");
-	MeshComp->AttachTo(GetCapsuleComponent());
+	//MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComp"));
+	//MeshComp->SetCollisionProfileName("NoColission");
+	//MeshComp->AttachTo(GetCapsuleComponent());
+
+	ConstructorHelpers::FObjectFinder<USkeletalMesh>SkeletalMesh(TEXT("SkeletalMesh'/Game/AnimStarterPack/UE4_Mannequin/Mesh/SK_Mannequin.SK_Mannequin'"));
+	if (SkeletalMesh.Succeeded()) {
+		GetMesh()->SetSkeletalMesh(SkeletalMesh.Object);
+	}
+	GetMesh()->SetWorldLocation(FVector(-50.0f, 0.0f, 0.0f));
+	GetMesh()->SetWorldScale3D(FVector(0.9f, 0.9f, 0.9f));
+	GetMesh()->SetAnimationMode(EAnimationMode::AnimationBlueprint);
+	ConstructorHelpers::FObjectFinder<UAnimBlueprint>AnimeObj(TEXT("AnimBlueprint'/Game/Blueprints/Walking.Walking'"));
+	if (AnimeObj.Succeeded()) {
+		GetMesh()->SetAnimInstanceClass(AnimeObj.Object->GetAnimBlueprintGeneratedClass());
+	}
 
 	PlayerCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("PlayerCamera"));
 	CameraBoom = CreateAbstractDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
@@ -27,7 +46,7 @@ AMyCharacter::AMyCharacter()
 	ArrowComp = CreateDefaultSubobject<UArrowComponent>(TEXT("ArrowComponent"));
 	ArrowComp->SetHiddenInGame(false);
 	ArrowComp->ArrowSize = 2.0f;
-	ArrowComp->AttachTo(MeshComp);
+	ArrowComp->AttachTo(GetMesh());
 
 	CollectCollisionComp = CreateDefaultSubobject<USphereComponent>(TEXT("CollectCollisionComp"));
 	CollectCollisionComp->InitSphereRadius(200.0f);
@@ -35,7 +54,12 @@ AMyCharacter::AMyCharacter()
 
 	GetCharacterMovement()->MaxWalkSpeed = 400;
 
-	AutoPossessPlayer = EAutoReceiveInput::Player0;
+	ConstructorHelpers::FClassFinder<UUserWidget>Widget(TEXT("WidgetBlueprint'/Game/Blueprints/Pause.Pause_C'"));
+	if (Widget.Succeeded()) {
+		UserWidget = Widget.Class;
+	}
+
+	//AutoPossessPlayer = EAutoReceiveInput::Player0;
 
 }
 
@@ -72,7 +96,7 @@ void AMyCharacter::SetupPlayerInputComponent(class UInputComponent* InputCompone
 	InputComponent->BindAction("Drop", IE_Pressed, this, &AMyCharacter::DropProjectile);
 	InputComponent->BindAction("Collect", IE_Pressed, this, &AMyCharacter::OnCollect);
 
-
+	InputComponent->BindAction("Pause", IE_Pressed, this, &AMyCharacter::Pause);
 	 
 
 
@@ -175,7 +199,7 @@ void AMyCharacter::DropProjectile() {
 	UWorld* World = GetWorld();
 
 	if (World != nullptr) {
-		FRotator Rotation = MeshComp->GetComponentRotation();
+		FRotator Rotation = GetMesh()->GetComponentRotation();
 		AProjectTileActor* Proj = World->SpawnActor<AProjectTileActor>
 			(GetActorLocation(), Rotation, SpawnParameters);
 		if (Proj != nullptr) {
@@ -189,9 +213,9 @@ void AMyCharacter::DropProjectile() {
 void AMyCharacter::Turn(float Value) {
 
 	//AddControllerYawInput(Value);
-	FRotator NewRotation = MeshComp->GetComponentRotation();
+	FRotator NewRotation = GetMesh()->GetComponentRotation();
 	NewRotation.Yaw += Value;
-	MeshComp->SetWorldRotation(NewRotation);
+	GetMesh()->SetWorldRotation(NewRotation);
 
 
 
@@ -208,6 +232,25 @@ void AMyCharacter::OnCollect() {
 			ItemCoeltado->Destroy();
 			UE_LOG(LogTemp, Warning, TEXT("%d"), Inventory.Num());
 		}
+	}
+
+	
+}
+
+void AMyCharacter::Pause() {
+
+	UWorld* World = GetWorld();
+	if (World != nullptr) {
+		APlayerController* PlayerController = UGameplayStatics::GetPlayerController(World, 0);
+		if (PlayerController != nullptr && UserWidget != NULL) {
+			PlayerController->SetPause(true);
+			UUserWidget* UserW = UWidgetBlueprintLibrary::Create(World, UserWidget, PlayerController);
+			if (UserW != nullptr) {
+				UserW->AddToViewport();
+				PlayerController->bShowMouseCursor = true;
+			}
+		}
+
 	}
 }
 

@@ -3,10 +3,13 @@
 #include "MyProject.h"
 #include "MyProjectGameMode.h"
 #include "MyHUD.h"
+#include "MyCharacter.h"
 
 AMyProjectGameMode::AMyProjectGameMode() {
 
-	HUDClass = AMyHUD::StaticClass();
+	//HUDClass = AMyHUD::StaticClass();
+
+	DefaultPawnClass = AMyCharacter::StaticClass();
 
 }
 
